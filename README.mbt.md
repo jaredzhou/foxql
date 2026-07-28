@@ -5,7 +5,7 @@ Compile-time type-safe SQL builder for PostgreSQL in MoonBit.
 ## Setup
 
 ```bash
-moon add jaredzhou/foxql@0.1.3
+moon add jaredzhou/foxql@0.1.4
 ```
 
 Then import in your `moon.pkg`:
