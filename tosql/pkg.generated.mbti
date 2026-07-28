@@ -1,0 +1,32 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "jaredzhou/foxql/tosql"
+
+import {
+  "jaredzhou/foxql/ast",
+  "jaredzhou/moonpg",
+}
+
+// Values
+pub fn delete_stmt_to_sql(@ast.DeleteStmt) -> (String, Array[&@moonpg.ToValue])
+
+pub fn expr_to_sql(@ast.Expr) -> (String, Array[&@moonpg.ToValue])
+
+pub fn insert_stmt_to_sql(@ast.InsertStmt) -> (String, Array[&@moonpg.ToValue])
+
+pub fn select_stmt_to_sql(@ast.SelectStmt) -> (String, Array[&@moonpg.ToValue])
+
+pub fn update_stmt_to_sql(@ast.UpdateStmt) -> (String, Array[&@moonpg.ToValue])
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits
+pub trait ToSql {
+  fn to_sql(Self) -> (String, Array[&@moonpg.ToValue])
+}
+pub impl ToSql for @ast.Expr
+pub impl ToSql for @ast.SelectStmt
+

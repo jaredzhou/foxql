@@ -1,0 +1,8 @@
+supported_targets = "native"
+
+import {
+  "jaredzhou/foxql/ast",
+  "jaredzhou/foxql/tosql",
+  "jaredzhou/foxql/types",
+  "jaredzhou/moonpg",
+}

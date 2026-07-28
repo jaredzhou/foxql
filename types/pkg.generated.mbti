@@ -1,0 +1,14 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "jaredzhou/foxql/types"
+
+// Values
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+pub type SqlType = String
+
+// Traits
+

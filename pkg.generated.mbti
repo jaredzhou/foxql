@@ -1,0 +1,79 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "jaredzhou/foxql"
+
+import {
+  "jaredzhou/foxql/ast",
+  "jaredzhou/foxql/builder",
+  "moonbitlang/core/debug",
+}
+
+// Values
+pub fn[T] avg(@builder.Column[T]) -> @ast.Aggregation
+
+pub fn[T] count(@builder.Column[T]) -> @ast.Aggregation
+
+pub fn count_star() -> @ast.Aggregation
+
+pub fn[T] max(@builder.Column[T]) -> @ast.Aggregation
+
+pub fn[T] min(@builder.Column[T]) -> @ast.Aggregation
+
+pub fn not_(@ast.Expr) -> @ast.Expr
+
+pub fn[T] sum(@builder.Column[T]) -> @ast.Aggregation
+
+// Errors
+
+// Types and methods
+pub(all) struct Schema {
+  tables : Map[String, SchemaTable]
+}
+pub fn Schema::load(Array[SchemaColumn]) -> Self
+pub fn Schema::table(Self, String) -> SchemaTable
+
+pub(all) struct SchemaColumn {
+  table_name : String
+  column_name : String
+  sql_type : String
+  is_primary_key : Bool
+} derive(Eq, @debug.Debug)
+
+pub(all) struct SchemaTable {
+  table_name : String
+  columns : Map[String, SchemaColumn]
+  column_names : Array[String]
+  primary_key : String?
+}
+pub fn SchemaTable::col(Self, String) -> @ast.ColumnRef
+pub fn SchemaTable::delete(Self) -> @builder.DeleteBuilder
+pub fn SchemaTable::has_column(Self, String) -> Bool
+pub fn SchemaTable::insert(Self, Array[&@builder.AnyColumn]) -> @builder.InsertBuilder
+pub fn SchemaTable::select(Self, columns? : Array[&@builder.AnyColumn]) -> @builder.SelectBuilder
+pub fn SchemaTable::update(Self) -> @builder.UpdateBuilder
+pub impl FieldResolver for SchemaTable
+
+// Type aliases
+pub using @ast {type Aggregation}
+
+pub using @builder {type Column}
+
+pub using @ast {type ColumnRef}
+
+pub using @ast {type Expr}
+
+pub using @ast {type OrderByClause}
+
+pub using @ast {type OrderDirection}
+
+pub using @ast {type SelectStmt}
+
+pub type SqlType = String
+
+pub using @builder {type Table}
+
+// Traits
+pub(open) trait FieldResolver {
+  fn resolve_column(Self, String) -> @ast.ColumnRef?
+  fn table_name(Self) -> String
+}
+

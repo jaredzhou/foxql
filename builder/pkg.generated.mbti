@@ -1,0 +1,169 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "jaredzhou/foxql/builder"
+
+import {
+  "jaredzhou/foxql/ast",
+  "jaredzhou/moonpg",
+  "moonbitlang/core/debug",
+}
+
+// Values
+pub fn[T] avg(Column[T]) -> @ast.Aggregation
+
+pub fn[T] count(Column[T]) -> @ast.Aggregation
+
+pub fn count_star() -> @ast.Aggregation
+
+pub fn[T] max(Column[T]) -> @ast.Aggregation
+
+pub fn[T] min(Column[T]) -> @ast.Aggregation
+
+pub fn[T] sum(Column[T]) -> @ast.Aggregation
+
+// Errors
+
+// Types and methods
+pub(all) struct Column[T] {
+  name : String
+  table : String
+  sql_type : String
+  _marker : T?
+} derive(Eq, @debug.Debug)
+pub fn[T] Column::asc(Self[T]) -> @ast.OrderByClause
+pub fn[T : Comparable + @moonpg.ToValue] Column::between(Self[T], T, T) -> @ast.Expr
+pub fn[T] Column::desc(Self[T]) -> @ast.OrderByClause
+pub fn[T : @moonpg.ToValue] Column::eq(Self[T], T) -> @ast.Expr
+pub fn[T] Column::eq_col(Self[T], Self[T]) -> @ast.Expr
+pub fn[T] Column::eq_select(Self[T], @ast.SelectStmt) -> @ast.Expr
+pub fn[T : Comparable + @moonpg.ToValue] Column::gt(Self[T], T) -> @ast.Expr
+pub fn[T : Comparable] Column::gt_select(Self[T], @ast.SelectStmt) -> @ast.Expr
+pub fn[T : Comparable + @moonpg.ToValue] Column::gte(Self[T], T) -> @ast.Expr
+pub fn[T : Comparable] Column::gte_select(Self[T], @ast.SelectStmt) -> @ast.Expr
+pub fn[T : @moonpg.ToValue] Column::in_(Self[T], Array[T]) -> @ast.Expr
+pub fn[T] Column::in_select(Self[T], @ast.SelectStmt) -> @ast.Expr
+pub fn[T] Column::is_not_null(Self[T]) -> @ast.Expr
+pub fn[T] Column::is_null(Self[T]) -> @ast.Expr
+pub fn[T : StringMatchable] Column::like(Self[T], String) -> @ast.Expr
+pub fn[T : Comparable + @moonpg.ToValue] Column::lt(Self[T], T) -> @ast.Expr
+pub fn[T : Comparable] Column::lt_select(Self[T], @ast.SelectStmt) -> @ast.Expr
+pub fn[T : Comparable + @moonpg.ToValue] Column::lte(Self[T], T) -> @ast.Expr
+pub fn[T : Comparable] Column::lte_select(Self[T], @ast.SelectStmt) -> @ast.Expr
+pub fn[T : @moonpg.ToValue] Column::neq(Self[T], T) -> @ast.Expr
+pub fn[T] Column::neq_select(Self[T], @ast.SelectStmt) -> @ast.Expr
+pub fn[T] Column::new(String, String, String) -> Self[T]
+pub fn[T : StringMatchable] Column::not_like(Self[T], String) -> @ast.Expr
+pub fn[T] Column::to_ref(Self[T]) -> @ast.ColumnRef
+pub impl[T] AnyColumn for Column[T]
+
+pub(all) struct DeleteBuilder {
+  table : Table
+} derive(Eq, @debug.Debug)
+pub fn DeleteBuilder::new(Table) -> Self
+pub fn DeleteBuilder::where_(Self, @ast.Expr) -> DeleteReady
+
+pub(all) struct DeleteReady {
+  table : Table
+  where_clause : @ast.Expr
+  returning : Array[@ast.ColumnRef]?
+}
+pub fn DeleteReady::returning(Self, Array[&AnyColumn]) -> Self
+pub fn DeleteReady::to_sql(Self) -> (String, Array[&@moonpg.ToValue])
+
+pub(all) struct InsertBuilder {
+  table : Table
+  columns : Array[@ast.ColumnRef]
+  values : Array[Array[&@moonpg.ToValue]]
+  conflict_cols : Array[@ast.ColumnRef]
+  conflict_action : Int
+  conflict_sets : Array[@ast.SetClause]
+  returning : Array[@ast.ColumnRef]?
+}
+pub fn InsertBuilder::do_nothing(Self) -> Self
+pub fn InsertBuilder::do_update(Self, &AnyColumn, &@moonpg.ToValue) -> Self
+pub fn InsertBuilder::new(Table, Array[&AnyColumn]) -> Self
+pub fn InsertBuilder::on_conflict(Self, Array[&AnyColumn]) -> Self
+pub fn InsertBuilder::returning(Self, Array[&AnyColumn]) -> Self
+pub fn InsertBuilder::rows(Self, Array[Array[&@moonpg.ToValue]]) -> Self
+pub fn InsertBuilder::to_sql(Self) -> (String, Array[&@moonpg.ToValue])
+pub fn InsertBuilder::values(Self, Array[&@moonpg.ToValue]) -> Self
+
+pub(all) struct SelectBuilder {
+  table : Table
+  columns : Array[@ast.ColumnRef]
+  aggregates : Array[@ast.Aggregation]
+  where_clause : @ast.Expr?
+  joins : Array[@ast.JoinClause]
+  group_by : Array[@ast.ColumnRef]
+  having : @ast.Expr?
+  order_by : Array[@ast.OrderByClause]
+  limit : Int?
+  offset : Int?
+  distinct : Bool
+  distinct_on : Array[@ast.ColumnRef]
+}
+pub fn SelectBuilder::agg(Self, @ast.Aggregation) -> Self
+pub fn SelectBuilder::build(Self) -> @ast.SelectStmt
+pub fn SelectBuilder::distinct(Self) -> Self
+pub fn SelectBuilder::distinct_on(Self, Array[&AnyColumn]) -> Self
+pub fn SelectBuilder::group_by(Self, Array[&AnyColumn]) -> Self
+pub fn SelectBuilder::having(Self, @ast.Expr) -> Self
+pub fn SelectBuilder::join(Self, Table, @ast.Expr) -> Self
+pub fn SelectBuilder::limit(Self, Int) -> Self
+pub fn SelectBuilder::new(Table, Array[@ast.ColumnRef]) -> Self
+pub fn SelectBuilder::offset(Self, Int) -> Self
+pub fn SelectBuilder::order_by(Self, @ast.OrderByClause) -> Self
+pub fn SelectBuilder::to_sql(Self) -> (String, Array[&@moonpg.ToValue])
+pub fn SelectBuilder::where_(Self, @ast.Expr) -> Self
+
+pub(all) struct Table {
+  name : String
+  schema_name : String?
+} derive(Eq, @debug.Debug)
+pub fn Table::delete(Self) -> DeleteBuilder
+pub fn Table::insert(Self, Array[&AnyColumn]) -> InsertBuilder
+pub fn Table::new(String, schema? : String) -> Self
+pub fn Table::qualified_name(Self) -> String
+pub fn Table::select(Self, columns? : Array[&AnyColumn]) -> SelectBuilder
+pub fn Table::update(Self) -> UpdateBuilder
+
+pub(all) struct UpdateBuilder {
+  table : Table
+  set_clauses : Array[@ast.SetClause]
+}
+pub fn UpdateBuilder::new(Table) -> Self
+pub fn UpdateBuilder::set(Self, &AnyColumn, &@moonpg.ToValue) -> Self
+pub fn UpdateBuilder::where_(Self, @ast.Expr) -> UpdateReady
+
+pub(all) struct UpdateReady {
+  table : Table
+  set_clauses : Array[@ast.SetClause]
+  where_clause : @ast.Expr
+  returning : Array[@ast.ColumnRef]?
+}
+pub fn UpdateReady::returning(Self, Array[&AnyColumn]) -> Self
+pub fn UpdateReady::to_sql(Self) -> (String, Array[&@moonpg.ToValue])
+
+// Type aliases
+
+// Traits
+pub trait AnyColumn {
+  fn name(Self) -> String
+  fn table_name(Self) -> String
+  fn sql_type(Self) -> String
+}
+pub impl AnyColumn for @ast.ColumnRef
+pub fn &AnyColumn::asc(Self) -> @ast.OrderByClause
+pub fn &AnyColumn::desc(Self) -> @ast.OrderByClause
+pub fn &AnyColumn::to_ref(Self) -> @ast.ColumnRef
+
+pub trait Comparable {
+  fn compare(Self) -> Unit
+}
+pub impl Comparable for Int
+pub impl Comparable for Double
+
+pub trait StringMatchable {
+  fn str_match(Self) -> Unit
+}
+pub impl StringMatchable for String
+

@@ -1,0 +1,141 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "jaredzhou/foxql/ast"
+
+import {
+  "jaredzhou/moonpg",
+  "moonbitlang/core/debug",
+}
+
+// Values
+pub fn not_(Expr) -> Expr
+
+// Errors
+
+// Types and methods
+pub(all) enum Aggregation {
+  Count(ColumnRef?)
+  Sum(ColumnRef)
+  Avg(ColumnRef)
+  Min(ColumnRef)
+  Max(ColumnRef)
+} derive(Eq, @debug.Debug)
+pub fn[T : @moonpg.ToValue] Aggregation::eq(Self, T) -> Expr
+pub fn[T : @moonpg.ToValue] Aggregation::gt(Self, T) -> Expr
+pub fn[T : @moonpg.ToValue] Aggregation::gte(Self, T) -> Expr
+pub fn[T : @moonpg.ToValue] Aggregation::lt(Self, T) -> Expr
+pub fn[T : @moonpg.ToValue] Aggregation::lte(Self, T) -> Expr
+pub fn[T : @moonpg.ToValue] Aggregation::neq(Self, T) -> Expr
+
+pub(all) struct ColumnRef {
+  name : String
+  table : String
+} derive(Eq, @debug.Debug)
+pub fn ColumnRef::eq(Self, &@moonpg.ToValue) -> Expr
+pub fn ColumnRef::gt(Self, &@moonpg.ToValue) -> Expr
+pub fn ColumnRef::gte(Self, &@moonpg.ToValue) -> Expr
+pub fn ColumnRef::lt(Self, &@moonpg.ToValue) -> Expr
+pub fn ColumnRef::lte(Self, &@moonpg.ToValue) -> Expr
+pub fn ColumnRef::neq(Self, &@moonpg.ToValue) -> Expr
+
+pub(all) struct DeleteStmt {
+  table : String
+  where_clause : Expr
+  returning : Array[ColumnRef]?
+}
+
+pub(all) enum Expr {
+  Compare(ColumnRef, Operator, &@moonpg.ToValue)
+  CompareCols(ColumnRef, Operator, ColumnRef)
+  And(Array[Expr])
+  Or(Array[Expr])
+  Not(Expr)
+  InList(ColumnRef, Array[&@moonpg.ToValue])
+  InSelect(ColumnRef, SelectStmt)
+  Between(ColumnRef, &@moonpg.ToValue, &@moonpg.ToValue)
+  IsNull(ColumnRef)
+  IsNotNull(ColumnRef)
+  AggCompare(Aggregation, Operator, &@moonpg.ToValue)
+  CompareSelect(ColumnRef, Operator, SelectStmt)
+}
+pub fn Expr::and_(Self, Self) -> Self
+pub fn Expr::or_(Self, Self) -> Self
+
+pub(all) struct InsertStmt {
+  table : String
+  columns : Array[ColumnRef]
+  values : Array[Array[&@moonpg.ToValue]]
+  on_conflict : OnConflict?
+  returning : Array[ColumnRef]?
+}
+
+pub(all) struct JoinClause {
+  table : String
+  on : Expr
+}
+
+pub(all) enum OnConflict {
+  DoNothing(String)
+  DoUpdate(String, Array[SetClause])
+}
+
+pub(all) enum Operator {
+  Eq
+  Neq
+  Gt
+  Gte
+  Lt
+  Lte
+  Like
+  NotLike
+  In
+  Between
+  IsNull
+  IsNotNull
+} derive(Eq, @debug.Debug)
+pub fn Operator::to_sql_op(Self) -> String
+
+pub(all) struct OrderByClause {
+  column : ColumnRef
+  direction : OrderDirection
+} derive(Eq, @debug.Debug)
+
+pub(all) enum OrderDirection {
+  Asc
+  Desc
+} derive(Eq, @debug.Debug)
+
+pub(all) enum SelectExpr {
+  Col(ColumnRef)
+  Agg(Aggregation)
+} derive(Eq, @debug.Debug)
+
+pub(all) struct SelectStmt {
+  table : String
+  columns : Array[SelectExpr]
+  where_clause : Expr?
+  joins : Array[JoinClause]
+  group_by : Array[ColumnRef]
+  having : Expr?
+  order_by : Array[OrderByClause]
+  limit : Int?
+  offset : Int?
+  distinct : Bool
+  distinct_on : Array[ColumnRef]
+}
+
+pub(all) struct SetClause {
+  column : ColumnRef
+  value : &@moonpg.ToValue
+}
+
+pub(all) struct UpdateStmt {
+  table : String
+  set_clauses : Array[SetClause]
+  where_clause : Expr
+  returning : Array[ColumnRef]?
+}
+
+// Type aliases
+
+// Traits
+

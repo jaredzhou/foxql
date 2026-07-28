@@ -1,0 +1,8 @@
+# MoonBit build output
+_build/
+
+# MoonBit package cache
+.mooncakes/
+
+# IDE
+.claude/
